@@ -21,8 +21,7 @@ import os, sys
 import logging
 import contextlib
 import datetime
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)),".."))
-    
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 if __name__ == "__main__":
     angr_logging_level = logging.CRITICAL  # CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET
@@ -30,7 +29,7 @@ if __name__ == "__main__":
     logging.getLogger('cle.loader').setLevel(angr_logging_level)
 
     # In secs
-    timeout = 20*60
+    timeout = 20 * 60
 
     enclave_list = [
         ("ae_2.12/qe.so", False, False),
@@ -41,7 +40,8 @@ if __name__ == "__main__":
         ("teaclave-http-req_2.12/enclave.signed.so", False, True),
         ("teaclave-sealeddata_2.12/enclave.signed.so", False, True),
         ("teaclave-tls-client_2.12/enclave.signed.so", False, True),
-        ("contact_discovery_signal_2.1.3/libsabd_enclave.unstripped.so", True, False),
+        ("contact_discovery_signal_2.1.3/libsabd_enclave.unstripped.so", True,
+         False),
         ("sgx-gmp-demo_2.6/EnclaveGmpTest.so", True, False),
         ("wolfssl_2.12/Wolfssl_Enclave.so", False, False),
         ("teerex-tls-client/enclave.signed.so", True, True),
@@ -58,12 +58,13 @@ if __name__ == "__main__":
     for (enclave_path, old_sdk, teaclave) in enclave_list:
         assert timeout >= 0
         print("Checking", enclave_path)
-        with open(os.path.join(results_folder, 'Output_' + enclave_path.replace("/","_")),'w') as f:
-                proj = angr.Project(enclave_path)
-                guard = guardian.Project(angr_project=proj, old_sdk=old_sdk, teaclave=teaclave)
-                report = guardian.tools.Report(guardian_project=guard, timeout=timeout)
-                report.save(f)
-
-
-
-
+        with open(
+                os.path.join(results_folder,
+                             'Output_' + enclave_path.replace("/", "_")),
+                'w') as f:
+            proj = angr.Project(enclave_path)
+            guard = guardian.Project(
+                angr_project=proj, old_sdk=old_sdk, teaclave=teaclave)
+            report = guardian.tools.Report(
+                guardian_project=guard, timeout=timeout)
+            report.save(f)

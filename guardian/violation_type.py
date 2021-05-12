@@ -16,6 +16,7 @@
 
 from enum import Enum
 
+
 class ViolationType(Enum):
     OutOfEnclaveRead = 1
     OutOfEnclaveWrite = 2

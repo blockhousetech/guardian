@@ -64,10 +64,10 @@ class Project:
         self.init_enclave_state()
         self.entry_state.register_plugin('enclave',
                                          EnclaveState(self.angr_project))
-        self.entry_state.register_plugin(
-            'heap',
-            angr.SimHeapBrk(heap_base=self.layout.heap_start,
-                            heap_size=self.layout.heap_size))
+        self.entry_state.register_plugin('heap',
+                                         angr.SimHeapBrk(
+                                             heap_base=self.layout.heap_start,
+                                             heap_size=self.layout.heap_size))
         self.entry_state.libc.max_memcpy_size = 0x100
         self.entry_state.libc.max_buffer_size = 0x100
         self.entry_state.enclave.init_trace_and_stack()
@@ -88,7 +88,10 @@ class Project:
         if self.ecalls is None:
             self.ecalls = Heuristic.find_ecalls(self.angr_project)
         if self.ocalls is None:
-            self.ocalls = [lambda: Heuristic.find_ocalls(self.angr_project), lambda: Heuristic.find_ocalls_teaclave(self.angr_project)][self.teaclave is True]()
+            self.ocalls = [
+                lambda: Heuristic.find_ocalls(self.angr_project),
+                lambda: Heuristic.find_ocalls_teaclave(self.angr_project)
+            ][self.teaclave is True]()
 
     def set_target_ecall(self, ecall_id):
         self.simgr.active[0].regs.rdi = ecall_id

@@ -45,9 +45,9 @@ class Hooker:
                 for i in md.disasm(section_bytes, section.vaddr):
                     sim_proc = ins_to_sim_proc(i)
                     if sim_proc != None:
-                        logging.debug(
-                            "0x%x:\t%s\t%s\t%s" %
-                            (i.address, i.mnemonic, i.op_str, i.size))
+                        logging.debug("0x%x:\t%s\t%s\t%s" %
+                                      (i.address, i.mnemonic, i.op_str,
+                                       i.size))
                         angr_proj.hook(i.address, hook=sim_proc, length=i.size)
 
     def libc_functions_hooker(self, proj):
@@ -74,8 +74,9 @@ class Hooker:
         sgx_ocall_addr = proj.loader.find_symbol("sgx_ocall").rebased_addr
         proj.hook(sgx_ocall_addr, hook=OcallAbstraction())
         proj.hook(exit_addr, hook=TransitionToExited(no_sanitisation=old_sdk))
-        proj.hook(enter_addr,
-                  hook=RegisterEnteringValidation(no_sanitisation=old_sdk))
+        proj.hook(
+            enter_addr,
+            hook=RegisterEnteringValidation(no_sanitisation=old_sdk))
 
     def instruction_replacement(self, exit_addr):
         def replace(capstone_instruction) -> angr.SimProcedure:

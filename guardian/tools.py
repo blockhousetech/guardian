@@ -23,6 +23,7 @@ from .timeout import Timeout
 
 log = logging.getLogger(__name__)
 
+
 class Default:
     heap_size = 0x100000
     stack_size = 0x40000
@@ -89,8 +90,8 @@ class Heuristic:
                             ocall_rets.append(i.address)
 
                     assert len(ocall_rets) > 0
-                    ocalls.append(
-                        (symb.name, symb_addr, sgx_ocalls, ocall_rets))
+                    ocalls.append((symb.name, symb_addr, sgx_ocalls,
+                                   ocall_rets))
 
         return ocalls
 
@@ -197,7 +198,6 @@ class Heuristic:
         def is_var_access(op_str):
             return "ptr [rax" in op_str or "ptr [rbx" in op_str
 
-
         def get_size(op_str):
             size_str = op_str[:op_str.find("[")].strip()
             if size_str == "byte ptr":
@@ -208,7 +208,6 @@ class Heuristic:
                 return 4
             elif size_str == "qword ptr":
                 return 8
-
 
         def get_offset(op_str):
             addr_str = op_str[op_str.find("[") + 1:op_str.find("]")]
@@ -221,6 +220,7 @@ class Heuristic:
                 return int(offset_str, 0)
             except:
                 pass
+
 
 class Report:
     def __init__(self, guardian_project, timeout):
@@ -239,8 +239,10 @@ class Report:
         log.addHandler(stream_handler)
         plugins_log.addHandler(stream_handler)
 
-        log.info("There are {} ecalls to analyse.\n" .format(len(self.guardian_project.ecalls)))
-        for (ecall_index, ecall_name, ecall_addr, _) in guardian_project.ecalls: 
+        log.info("There are {} ecalls to analyse.\n".format(
+            len(self.guardian_project.ecalls)))
+        for (ecall_index, ecall_name, ecall_addr,
+             _) in guardian_project.ecalls:
             self.analyse_ecall(ecall_index, ecall_name, ecall_addr)
 
         log_contents = stream_object.getvalue()
@@ -252,26 +254,35 @@ class Report:
         plugins_log.setLevel(previous_plugins_logging_level)
 
     def save(self, file):
-            file.write(self.report)
+        file.write(self.report)
 
-    def analyse_ecall(self, ecall_index, ecall_name=None, ecall_addr=None, debug=False):
+    def analyse_ecall(self,
+                      ecall_index,
+                      ecall_name=None,
+                      ecall_addr=None,
+                      debug=False):
         assert self.timeout >= 0
 
         if ecall_addr == None or ecall_name == None:
-            [(_,ecall_name ,ecall_addr,_)] = [e for e in ecalls if e[0] == ecall_index]
-        
+            [(_, ecall_name, ecall_addr,
+              _)] = [e for e in ecalls if e[0] == ecall_index]
+
         # Instead of doing a deep copy, we will create a minimal guardian project.
         # It is customary but not required to place all import statements at the beginning of a module (Python documentation 6.1)
         # We violate this custom here...
         from .project import Project
         proj = angr.Project(self.guardian_project.angr_project.filename)
-        guard = Project(proj, find_missing_ecalls_or_ocalls=False, old_sdk=self.guardian_project.old_sdk, teaclave=self.guardian_project.teaclave, ecalls=self.guardian_project.ecalls, ocalls=self.guardian_project.ocalls)
+        guard = Project(
+            proj,
+            find_missing_ecalls_or_ocalls=False,
+            old_sdk=self.guardian_project.old_sdk,
+            teaclave=self.guardian_project.teaclave,
+            ecalls=self.guardian_project.ecalls,
+            ocalls=self.guardian_project.ocalls)
         guard.set_target_ecall(ecall_index)
 
-        log.info(
-            "Analysing ecall: {} {}..."
-            .format(ecall_index, ecall_name))
-        if self.timeout == 0: 
+        log.info("Analysing ecall: {} {}...".format(ecall_index, ecall_name))
+        if self.timeout == 0:
             self.explore_and_report(guard.simgr, ecall_addr)
             if debug:
                 IPython.embed()
@@ -285,9 +296,7 @@ class Report:
     def explore_and_report(self, simgr, ecall_addr):
         simgr.explore()
         log.info("  Exploration finished!")
-        log.info(
-            "  Simgr: {}"
-            .format(simgr))
+        log.info("  Simgr: {}".format(simgr))
         reached_ecall = []
         for exit_i in range(len(simgr.exited)):
             for te in simgr.exited[exit_i].enclave.jump_trace:
@@ -309,5 +318,5 @@ class Report:
                 if te.address == ecall_addr:
                     reached_ecall.append(simgr.violation[exit_i])
                     break
-        log.info("  No. of exited states reaching ecall: {}.\n"
-            .format(len(reached_ecall)))
+        log.info("  No. of exited states reaching ecall: {}.\n".format(
+            len(reached_ecall)))
