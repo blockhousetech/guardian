@@ -7,11 +7,17 @@ whether an SGX enclave binary is orderly according to the definition in [[1]](#1
 to detect typical enclave attack primitives in the process. It uses angr [[2]](#2)—a symbolic
 execution engine that focus on usability—as a backend.
 
+### Licence
+
+Guardian is licensed under the GNU Affero General Public License v3.0. If you have any queries about that, please reach out to [us](mailto:research@tbtl.com).
+
 ## Running Guardian
 
 ### Prerequisites
 
-Guardian requires Python 3.6 or newer.
+Guardian requires [Python 3.6 or newer](https://docs.python.org/3/using/index.html) --- make sure you have *pip for Python3* installed. It also relies on [angr](https://github.com/angr/angr) [[2]](#2), which can be installed using pip as follows:
+
+`pip install angr`
 
 ### Setup
 
@@ -38,12 +44,18 @@ It contains the content of the Guardian tool package that you install, either us
 
 ### evaluation
 
-This folder contains SGX enclave binaries and a script we used in the vulnerability analysis in [[1]](#1).
+This folder contains SGX enclave binaries and a script we used in the vulnerability analysis in [[1]](#1). You should be able to reproduce our evaluation by running, from this folder:
+
+`python evaluation.py`
 
 ### examples
 
 In this folder, you can find several scripts: `*.py` and `*-after-fix.py`, together with some SGX enclave binaries. These scripts expose vulnerabilities we found during our analysis in [[1]](#1) and demonstrate these issues have been resolved after reporting them to the maintainers. If you want to run these scripts using tox, you will have to modify `tox.ini`.
-> :warning: If you want to run these examples, make sure that your current working directiory is the main folder of the Guardian repository.
+> :warning: If you want to run these examples, make sure that your current working directory is the main folder of the Guardian repository.
+
+You can run specific examples by executing, for instance, the following:
+
+`python examples/sgx-gmp-demo_2.6.py`
 
 ### tests
 

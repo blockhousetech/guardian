@@ -30,11 +30,11 @@ logging.getLogger('cle.loader').setLevel(angr_logging_level)
 # Before fix
 
 # guardian configuration
-enclave_path = "examples/intel/enclave.signed.so"
+enclave_path = "examples/sgx-gmp-demo_2.6/enclave.signed.so"
 ecalls = [(1, 'sgx_e_mpz_add', 4200800,
            [(4201309, 4201314), (4201351, 4201356),
             (4201459,
-             4201464)])]  # can be find manually or by calling heuristics
+             4201464)])]  # can be found manually or by calling heuristics
 find_missing_ecalls_or_ocalls = False  # tell angr not to look for missing ocalls (ecalls we supplied)
 
 # setup angr and guardian projects
@@ -57,7 +57,7 @@ assert guard.simgr.violation
 # After fix
 
 # guardian configuration
-enclave_path = "examples/intel/enclave-after-fix.signed.so"
+enclave_path = "examples/sgx-gmp-demo_2.6/enclave-after-fix.signed.so"
 ecalls = [(1, 'sgx_e_mpz_add', 4200800,
            [(4201309, 4201314), (4201351, 4201356),
             (4201459,
