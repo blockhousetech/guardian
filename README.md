@@ -5,7 +5,7 @@
 Guardian is a tool that uses symbolic execution to validate
 whether an SGX enclave binary is orderly according to the definition in [[1]](#1)—it also tries
 to detect typical enclave attack primitives in the process. It uses angr [[2]](#2)—a symbolic
-execution engine that focus on usability—as a backend.
+execution engine that focus on usability—as a backend. For more details, please read our [paper](https://arxiv.org/abs/2105.05962).
 
 ### Licence
 
@@ -63,22 +63,23 @@ Here, you can find a limited number of tests for our tool, together with some SG
 
 ## Citing
 
-Guardian is a part of the research effort that we present in [[1]](#1). If you want to refer to our work, please use the following BibTeX entry for citation.
+Guardian is a part of the research effort that we present in [[1]](#1); the paper is available [here](https://arxiv.org/abs/2105.05962). If you want to refer to our work, please use the following BibTeX entry for citation.
 
 ```
-@InProceedings{AntoninoWoloszynRoscoe:Guardian:-symbolic-execution-of-orderly-SGX-enclaves,
-author = {Pedro Antonino and Wojciech Aleksander Wołoszyn and Andrew William Roscoe},
-title = {Guardian: symbolic execution of orderly SGX enclaves},
-year = {2021},
-note = {Under review},
-keywords = {under-review}
+@misc{antonino2021guardian,
+      title={Guardian: symbolic validation of orderliness in SGX enclaves}, 
+      author={Pedro Antonino and Wojciech Aleksander Wołoszyn and A. W. Roscoe},
+      year={2021},
+      eprint={2105.05962},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR}
 }
 ```
 
 ## References
 <a id="1">[1]</a> Antonino, Pedro and Wołoszyn, Wojciech Aleksander and Roscoe, Andrew William (2021). 
 Guardian: symbolic execution of orderly SGX enclaves. 
-Under review.
+Available at: [https://arxiv.org/abs/2105.05962](https://arxiv.org/abs/2105.05962).
 
 <a id="2">[2]</a> Shoshitaishvili, Yan and Wang, Ruoyu and Salls, Christopher and Stephens, Nick and Polino, Mario and Dutcher, Audrey and Grosen, John and Feng, Siji and Hauser, Christophe and Kruegel, Christopher and Vigna, Giovanni (2016).
 IEEE Symposium on Security and Privacy.
