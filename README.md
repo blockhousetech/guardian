@@ -66,13 +66,16 @@ Here, you can find a limited number of tests for our tool, together with some SG
 Guardian is a part of the research effort that we present in [[1]](#1); the paper is available [here](https://arxiv.org/abs/2105.05962). If you want to refer to our work, please use the following BibTeX entry for citation.
 
 ```
-@misc{antonino2021guardian,
+@InProceedings{AntoninoWoloszynRoscoe:Guardian:-symbolic-validation-of-orderliness-in-SGX-enclaves,
       title={Guardian: symbolic validation of orderliness in SGX enclaves}, 
       author={Pedro Antonino and Wojciech Aleksander Wołoszyn and A. W. Roscoe},
+      journal = {Computer Science arXiv},
       year={2021},
       eprint={2105.05962},
       archivePrefix={arXiv},
-      primaryClass={cs.CR}
+      primaryClass={cs.CR},
+      note = {Under review},
+      keywords = {under-review}
 }
 ```
 
