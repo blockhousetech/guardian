@@ -4,8 +4,8 @@
 
 Guardian is a tool that uses symbolic execution to validate
 whether an SGX enclave binary is orderly according to the definition in [[1]](#1)—it also tries
-to detect typical enclave attack primitives in the process. It uses angr [[2]](#2)—a symbolic
-execution engine that focus on usability—as a backend. For more details, please read our [paper](https://arxiv.org/abs/2105.05962).
+to detect typical enclave attack primitives in the process. It uses angr [[3]](#3)—a symbolic
+execution engine that focus on usability—as a backend. For more details, please read our [paper](https://doi.org/10.1145/3474123.3486755).
 
 ### Licence
 
@@ -15,7 +15,7 @@ Guardian is licensed under the GNU Affero General Public License v3.0. If you ha
 
 ### Prerequisites
 
-Guardian requires [Python 3.6 or newer](https://docs.python.org/3/using/index.html) --- make sure you have *pip for Python3* installed. It also relies on [angr](https://github.com/angr/angr) [[2]](#2), which can be installed using pip as follows:
+Guardian requires [Python 3.6 or newer](https://docs.python.org/3/using/index.html) --- make sure you have *pip for Python3* installed. It also relies on [angr](https://github.com/angr/angr) [[3]](#3), which can be installed using pip as follows:
 
 `pip install angr`
 
@@ -63,26 +63,37 @@ Here, you can find a limited number of tests for our tool, together with some SG
 
 ## Citing
 
-Guardian is a part of the research effort that we present in [[1]](#1); the paper is available [here](https://arxiv.org/abs/2105.05962). If you want to refer to our work, please use the following BibTeX entry for citation.
+Guardian is a part of the research effort that we present in [[1]](#1); the paper is available [here](https://doi.org/10.1145/3474123.3486755) and its preprint [here](https://arxiv.org/abs/2105.05962). If you want to refer to our work, please use the following BibTeX entry for citation.
 
 ```
-@InProceedings{AntoninoWoloszynRoscoe:Guardian:-symbolic-validation-of-orderliness-in-SGX-enclaves,
-      title={Guardian: symbolic validation of orderliness in SGX enclaves}, 
-      author={Pedro Antonino and Wojciech Aleksander Wołoszyn and A. W. Roscoe},
-      journal = {Computer Science arXiv},
-      year={2021},
-      eprint={2105.05962},
-      archivePrefix={arXiv},
-      primaryClass={cs.CR},
-      note = {Under review},
-      keywords = {under-review}
+@inproceedings{DBLP:conf/ccsw-ws/AntoninoW021,
+  author    = {Pedro Antonino and
+               Wojciech Aleksander Woloszyn and
+               A. W. Roscoe},
+  editor    = {Yinqian Zhang and
+               Marten van Dijk},
+  title     = {Guardian: Symbolic Validation of Orderliness in {SGX} Enclaves},
+  booktitle = {CCSW@CCS '21: Proceedings of the 2021 on Cloud Computing Security
+               Workshop, Virtual Event, Republic of Korea, 15 November 2021},
+  pages     = {111--123},
+  publisher = {{ACM}},
+  year      = {2021},
+  url       = {https://doi.org/10.1145/3474123.3486755},
+  doi       = {10.1145/3474123.3486755},
+  timestamp = {Thu, 25 Nov 2021 14:33:02 +0100},
+  biburl    = {https://dblp.org/rec/conf/ccsw-ws/AntoninoW021.bib},
+  bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 ```
 
 ## References
+
 <a id="1">[1]</a> Antonino, Pedro and Wołoszyn, Wojciech Aleksander and Roscoe, Andrew William (2021). 
-Guardian: symbolic execution of orderly SGX enclaves. 
+Guardian: symbolic execution of orderly SGX enclaves. Presented at CCSW@CCS '21 and
+available at [https://doi.org/10.1145/3474123.3486755](https://doi.org/10.1145/3474123.3486755).
+
+
+<a id="2">[2]</a> Antonino, Pedro and Wołoszyn, Wojciech Aleksander and Roscoe, Andrew William (2021). Guardian: symbolic execution of orderly SGX enclaves. Preprint.
 Available at: [https://arxiv.org/abs/2105.05962](https://arxiv.org/abs/2105.05962).
 
-<a id="2">[2]</a> Shoshitaishvili, Yan and Wang, Ruoyu and Salls, Christopher and Stephens, Nick and Polino, Mario and Dutcher, Audrey and Grosen, John and Feng, Siji and Hauser, Christophe and Kruegel, Christopher and Vigna, Giovanni (2016).
-IEEE Symposium on Security and Privacy.
+<a id="3">[3]</a> Shoshitaishvili, Yan and Wang, Ruoyu and Salls, Christopher and Stephens, Nick and Polino, Mario and Dutcher, Audrey and Grosen, John and Feng, Siji and Hauser, Christophe and Kruegel, Christopher and Vigna, Giovanni (2016). IEEE Symposium on Security and Privacy.
