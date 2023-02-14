@@ -35,7 +35,8 @@ class Project:
                  enter_addr=None,
                  old_sdk=False,
                  teaclave=False,
-                 find_missing_ecalls_or_ocalls=True):
+                 find_missing_ecalls_or_ocalls=True,
+                 violation_check=True):
         self.angr_project = angr_project
         self.heap_size = [
             lambda: Default().get_heap_size(), lambda: heap_size
@@ -80,8 +81,10 @@ class Project:
         self.angr_project, self.simgr = Hooker().setup(
             self.angr_project, self.simgr, self.ecalls, self.ocalls,
             self.exit_addr, self.enter_addr, self.old_sdk)
-        self.angr_project, self.simgr = Breakpoints().setup(
-            self.angr_project, self.simgr, self.layout)
+        # Enable violation checks if flag is set
+        if violation_check:
+            self.angr_project, self.simgr = Breakpoints().setup(
+                self.angr_project, self.simgr, self.layout)
         self.simgr.use_technique(EnclaveExploration())
 
     def use_heurestic_for_ecalls_or_ocalls(self):
