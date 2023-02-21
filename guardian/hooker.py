@@ -81,7 +81,7 @@ class Hooker:
     def instruction_replacement(self, exit_addr):
         def replace(capstone_instruction) -> angr.SimProcedure:
             if capstone_instruction.mnemonic == "enclu" and capstone_instruction.address != exit_addr:
-                return SimEnclu()
+                return SimEnclu(violation_check=True)
             elif capstone_instruction.mnemonic == "xsave64":
                 return Nop(bytes_to_skip=4)
             elif capstone_instruction.mnemonic == "xrstor64":

@@ -24,7 +24,15 @@ import collections
 log = logging.getLogger(__name__)
 
 
-class SimEnclu(angr.SimProcedure):
+class GuardianSimProcedure(angr.SimProcedure):
+    """Base class for all Guardian SimProcedures. This class provides a common interface for all Guardian SimProcedures."""
+    def __init__(self, violation_check=True, **kwargs):
+        """Initialise the SimProcedure. If violation_check is True, then violations are checked."""
+        super().__init__(**kwargs)
+        self.violation_check = violation_check
+
+
+class SimEnclu(GuardianSimProcedure):
     IS_FUNCTION = False
 
     def run(self):
@@ -50,7 +58,8 @@ class SimEnclu(angr.SimProcedure):
             self.exit(1)
 
 
-class Nop(angr.SimProcedure):
+class Nop(GuardianSimProcedure):
+
     IS_FUNCTION = False
 
     def run(self, **kwargs):
@@ -59,12 +68,13 @@ class Nop(angr.SimProcedure):
             self.state.solver.true, 'Ijk_Boring')
 
 
-class Empty(angr.SimProcedure):
+class Empty(GuardianSimProcedure):
+
     def run(self):
         pass
 
 
-class UD2(angr.SimProcedure):
+class UD2(GuardianSimProcedure):
     IS_FUNCTION = False
 
     def run(self, **kwargs):
@@ -75,7 +85,7 @@ class UD2(angr.SimProcedure):
         self.exit(2)
 
 
-class Rdrand(angr.SimProcedure):
+class Rdrand(GuardianSimProcedure):
     IS_FUNCTION = False
 
     def run(self, **kwargs):
@@ -84,7 +94,7 @@ class Rdrand(angr.SimProcedure):
                                       self.state.solver.true, 'Ijk_Boring')
 
 
-class RegisterEnteringValidation(angr.SimProcedure):
+class RegisterEnteringValidation(GuardianSimProcedure):
     IS_FUNCTION = False
 
     def run(self, **kwargs):
@@ -109,7 +119,7 @@ class RegisterEnteringValidation(angr.SimProcedure):
                                       self.state.solver.true, 'Ijk_NoHook')
 
 
-class TransitionToTrusted(angr.SimProcedure):
+class TransitionToTrusted(GuardianSimProcedure):
     IS_FUNCTION = False
 
     def run(self, **kwargs):
@@ -136,7 +146,7 @@ class TransitionToTrusted(angr.SimProcedure):
                                       self.state.solver.true, 'Ijk_NoHook')
 
 
-class TransitionToExiting(angr.SimProcedure):
+class TransitionToExiting(GuardianSimProcedure):
     IS_FUNCTION = False
 
     def run(self, **kwargs):
@@ -156,7 +166,7 @@ class TransitionToExiting(angr.SimProcedure):
                                       self.state.solver.true, 'Ijk_NoHook')
 
 
-class TransitionToExited(angr.SimProcedure):
+class TransitionToExited(GuardianSimProcedure):
     IS_FUNCTION = False
 
     def run(self, **kwargs):
@@ -182,7 +192,7 @@ class TransitionToExited(angr.SimProcedure):
                                       self.state.solver.true, 'Ijk_NoHook')
 
 
-class TransitionToOcall(angr.SimProcedure):
+class TransitionToOcall(GuardianSimProcedure):
     IS_FUNCTION = False
 
     def run(self, **kwargs):
@@ -202,7 +212,7 @@ class TransitionToOcall(angr.SimProcedure):
                                       self.state.solver.true, 'Ijk_NoHook')
 
 
-class OcallAbstraction(angr.SimProcedure):
+class OcallAbstraction(GuardianSimProcedure):
     def run(self, **kwargs):
         log.debug("######### OCALL ABSTRACTION ###############")
         assert self.state.has_plugin("enclave")
@@ -216,7 +226,7 @@ class OcallAbstraction(angr.SimProcedure):
                                                self.state.arch.bits)
 
 
-class malloc(angr.SimProcedure):
+class malloc(GuardianSimProcedure):
     def run(self, sim_size):
         if self.state.solver.symbolic(sim_size):
             log.warning("Allocating size {}\n".format(sim_size))
