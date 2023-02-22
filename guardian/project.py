@@ -100,6 +100,10 @@ class Project:
 
     def init_enclave_state(self):
         self.entry_state = self.angr_project.factory.blank_state()
+        # Set angr options to silence warnings
+        self.entry_state.options.add(angr.options.SYMBOL_FILL_UNCONSTRAINED_MEMORY)
+        self.entry_state.options.add(angr.options.SYMBOL_FILL_UNCONSTRAINED_REGISTERS)
+        # Setup entry state
         self.entry_state.regs.rip = self.angr_project.loader.find_symbol(
             "enclave_entry").rebased_addr
         self.entry_state.regs.rax = 0x0
