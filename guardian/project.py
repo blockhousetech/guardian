@@ -78,13 +78,12 @@ class Project:
                 "df", self.entry_state.arch.bits)
 
         self.simgr = self.angr_project.factory.simgr(self.entry_state)
-        self.angr_project, self.simgr = Hooker().setup(
+        self.angr_project, self.simgr = Hooker(violation_check).setup(
             self.angr_project, self.simgr, self.ecalls, self.ocalls,
             self.exit_addr, self.enter_addr, self.old_sdk)
         # Enable violation checks if flag is set
-        if violation_check:
-            self.angr_project, self.simgr = Breakpoints().setup(
-                self.angr_project, self.simgr, self.layout)
+        self.angr_project, self.simgr = Breakpoints().setup(
+            self.angr_project, self.simgr, self.layout, violation_check = violation_check)
         self.simgr.use_technique(EnclaveExploration())
 
     def use_heurestic_for_ecalls_or_ocalls(self):
