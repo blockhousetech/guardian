@@ -26,21 +26,22 @@ log = logging.getLogger(__name__)
 
 
 class Breakpoints:
-    def setup(self, proj, simgr, layout):
+    def setup(self, proj, simgr, layout, violation_check=True):
 
         # Violation detection breakpoints
-        simgr.active[0].inspect.b(
-            'mem_read',
-            when=angr.BP_BEFORE,
-            action=lambda s: self.detect_read_violations(simgr, s, layout))
-        simgr.active[0].inspect.b(
-            'mem_write',
-            when=angr.BP_BEFORE,
-            action=lambda s: self.detect_write_violations(simgr, s, layout))
-        simgr.active[0].inspect.b(
-            'exit',
-            when=angr.BP_BEFORE,
-            action=lambda s: self.detect_jump_violations(simgr, s, layout))
+        if violation_check:
+            simgr.active[0].inspect.b(
+                'mem_read',
+                when=angr.BP_BEFORE,
+                action=lambda s: self.detect_read_violations(simgr, s, layout))
+            simgr.active[0].inspect.b(
+                'mem_write',
+                when=angr.BP_BEFORE,
+                action=lambda s: self.detect_write_violations(simgr, s, layout))
+            simgr.active[0].inspect.b(
+                'exit',
+                when=angr.BP_BEFORE,
+                action=lambda s: self.detect_jump_violations(simgr, s, layout))
 
         # Call stack tracking breakpoints
         simgr.active[0].inspect.b(
