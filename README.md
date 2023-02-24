@@ -34,6 +34,10 @@ Run `pip install .` in the main folder of the Guardian repository.
 
 Guardian supports tox automation tool. You can install tox using pip by calling `pip install tox`. Once you have tox installed, simply call `tox` in the main folder of the Guardian repository. By default, it will run some tests under Python 3.6, 3.7, and 3.8. You can modify this behaviour by editing the file `tox.ini`.
 
+### Intel SGX SDK (optional)
+
+If you want to analyze your own enclave with Guardian, it need to be built with an appropriate Intel SGX SDK version. We recommend the version 2.12.
+
 ## Breakdown of the repository structure
 
 Guardian repository comes with the main tool, evaluation script referenced in [[1]](#1), examples, and some tests.
