@@ -60,8 +60,8 @@ class EnclaveMemoryLayout:
         assert last_section is not None
         assert self.base_addr is not None
         self.heap_start = self.round_to_page(
-            last_section.min_addr - self.base_addr + last_section.memsize
-        ) + self.base_addr
+            last_section.min_addr - self.base_addr +
+            last_section.memsize) + self.base_addr
         self.heap_size = heap_init_size
         self.stack_start = self.heap_start + self.round_size_for_page(
             self.heap_size) + self.round_size_for_page(self.SE_GUARD_PAGE_SIZE)
@@ -72,8 +72,8 @@ class EnclaveMemoryLayout:
         self.tcs_size = self.TCS_SIZE
         self.ssa_start = self.tcs_start + self.round_size_for_page(
             self.tcs_size)
-        self.ssa_size = self.size_from_page_count(
-            self.SSA_FRAME_SIZE * self.SSA_NUM)
+        self.ssa_size = self.size_from_page_count(self.SSA_FRAME_SIZE *
+                                                  self.SSA_NUM)
         self.td_start = self.ssa_start + self.round_size_for_page(
             self.ssa_size) + self.round_size_for_page(self.SE_GUARD_PAGE_SIZE)
         self.td_size = self.TD_SIZE
@@ -95,8 +95,8 @@ class EnclaveMemoryLayout:
             # enclave size
             state.mem[global_data_addr + 0 * 8].uint64_t = self.enclave_size
             # heap offset
-            state.mem[global_data_addr
-                      + 1 * 8].uint64_t = self.heap_start - self.base_addr
+            state.mem[global_data_addr +
+                      1 * 8].uint64_t = self.heap_start - self.base_addr
             #heap size
             state.mem[global_data_addr + 2 * 8].uint64_t = self.heap_size
             # thread policy
@@ -107,8 +107,8 @@ class EnclaveMemoryLayout:
             # enclave size
             state.mem[global_data_addr + 1 * 8].uint64_t = self.enclave_size
             # heap offset
-            state.mem[global_data_addr
-                      + 2 * 8].uint64_t = self.heap_start - self.base_addr
+            state.mem[global_data_addr +
+                      2 * 8].uint64_t = self.heap_start - self.base_addr
             #heap size
             state.mem[global_data_addr + 3 * 8].uint64_t = self.heap_size
             # thread policy
@@ -125,8 +125,8 @@ class EnclaveMemoryLayout:
         # https://github.com/intel/linux-sgx/blob/b9b071b54476e93ba21ae4f8dc41394970667cdd/sdk/trts/trts_ecall.cpp
 
         # last sp relative to tcs in template but not here
-        state.mem[self.td_start
-                  + 8].uint64_t = self.stack_start + self.round_size_for_page(
+        state.mem[self.td_start +
+                  8].uint64_t = self.stack_start + self.round_size_for_page(
                       self.stack_size)
         # stack base relative to tcs in template but not here
         state.mem[self.td_start +

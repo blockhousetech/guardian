@@ -26,6 +26,7 @@ from collections import Counter
 
 
 class Project:
+
     def setup(self,
               path,
               heap_size=None,
@@ -42,9 +43,10 @@ class Project:
         self.ocalls = ocalls
         self.exit_addr = exit_addr
         self.enter_addr = enter_addr
-        self.guardian_proj = guardian.Project(
-            self.proj, self.heap_size, self.stack_size, self.ecalls,
-            self.ocalls, self.exit_addr, self.enter_addr)
+        self.guardian_proj = guardian.Project(self.proj, self.heap_size,
+                                              self.stack_size, self.ecalls,
+                                              self.ocalls, self.exit_addr,
+                                              self.enter_addr)
         self.guardian_proj.set_target_ecall(0x0)
         self.simgr = self.guardian_proj.simgr
         return self.proj, self.simgr
@@ -66,10 +68,10 @@ def test_all_violations(setup):
 
 def test_entry_sanitisation(setup):
     proj, simgr = setup("tests/entry_sanitisation/enclave.so")
-    proj.hook(
-        0x40685e, hook=guardian.simulation_procedures.Nop(bytes_to_skip=31))
-    proj.hook(
-        0x4068ac, hook=guardian.simulation_procedures.Nop(bytes_to_skip=18))
+    proj.hook(0x40685e,
+              hook=guardian.simulation_procedures.Nop(bytes_to_skip=31))
+    proj.hook(0x4068ac,
+              hook=guardian.simulation_procedures.Nop(bytes_to_skip=18))
     simgr.explore()
 
     assert simgr.violation[0].enclave.violation[
@@ -82,8 +84,8 @@ def test_entry_sanitisation(setup):
 
 def test_exit_sanitisation(setup):
     proj, simgr = setup("tests/exit_sanitisation/enclave.so")
-    proj.hook(
-        0x406924, hook=guardian.simulation_procedures.Nop(bytes_to_skip=34))
+    proj.hook(0x406924,
+              hook=guardian.simulation_procedures.Nop(bytes_to_skip=34))
     simgr.explore()
 
     assert simgr.violation[0].enclave.violation[

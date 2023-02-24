@@ -21,6 +21,7 @@ import pathlib
 
 FILE_DIR = pathlib.Path(__file__).parent
 
+
 class Project:
     """A class to setup a project and simulation manager for testing."""
 
@@ -50,9 +51,9 @@ class Project:
             self.ocalls,
             self.exit_addr,
             self.enter_addr,
-            violation_check=False, # Disable violation check
+            violation_check=False,  # Disable violation check
         )
-        
+
         self.guardian_proj.set_target_ecall(0x0)
         self.simgr = self.guardian_proj.simgr
         return self.proj, self.simgr
@@ -64,85 +65,88 @@ def setup():
 
 
 def test_all_violations(setup):
-    proj, simgr = setup(FILE_DIR/"all_violations"/"enclave.so")
+    proj, simgr = setup(FILE_DIR / "all_violations" / "enclave.so")
     simgr.explore()
 
     assert len(simgr.violation) == 0
 
 
 def test_entry_sanitisation(setup):
-    proj, simgr = setup(FILE_DIR /"entry_sanitisation"/"enclave.so")
-    proj.hook(0x40685E, hook=guardian.simulation_procedures.Nop(bytes_to_skip=31))
-    proj.hook(0x4068AC, hook=guardian.simulation_procedures.Nop(bytes_to_skip=18))
+    proj, simgr = setup(FILE_DIR / "entry_sanitisation" / "enclave.so")
+    proj.hook(0x40685E,
+              hook=guardian.simulation_procedures.Nop(bytes_to_skip=31))
+    proj.hook(0x4068AC,
+              hook=guardian.simulation_procedures.Nop(bytes_to_skip=18))
     simgr.explore()
 
     assert len(simgr.violation) == 0
 
 
 def test_exit_sanitisation(setup):
-    proj, simgr = setup(FILE_DIR/"exit_sanitisation"/"enclave.so")
-    proj.hook(0x406924, hook=guardian.simulation_procedures.Nop(bytes_to_skip=34))
+    proj, simgr = setup(FILE_DIR / "exit_sanitisation" / "enclave.so")
+    proj.hook(0x406924,
+              hook=guardian.simulation_procedures.Nop(bytes_to_skip=34))
     simgr.explore()
 
     assert len(simgr.violation) == 0
 
 
 def test_good_case(setup):
-    proj, simgr = setup(FILE_DIR/"good_case"/"enclave.so")
+    proj, simgr = setup(FILE_DIR / "good_case" / "enclave.so")
     simgr.explore()
 
     assert len(simgr.violation) == 0
 
 
 def test_out_of_jump(setup):
-    proj, simgr = setup(FILE_DIR/"out_of_jump"/"enclave.so")
+    proj, simgr = setup(FILE_DIR / "out_of_jump" / "enclave.so")
     simgr.explore()
 
     assert len(simgr.violation) == 0
 
 
 def test_out_of_read(setup):
-    proj, simgr = setup(FILE_DIR/"out_of_read"/"enclave.so")
+    proj, simgr = setup(FILE_DIR / "out_of_read" / "enclave.so")
     simgr.explore()
 
     assert len(simgr.violation) == 0
 
 
 def test_out_of_write(setup):
-    proj, simgr = setup(FILE_DIR/"out_of_write"/"enclave.so")
+    proj, simgr = setup(FILE_DIR / "out_of_write" / "enclave.so")
     simgr.explore()
 
     assert len(simgr.violation) == 0
 
 
 def test_symbolic_jump(setup):
-    proj, simgr = setup(FILE_DIR/"symbolic_jump"/"enclave.so")
+    proj, simgr = setup(FILE_DIR / "symbolic_jump" / "enclave.so")
     simgr.explore()
 
     assert len(simgr.violation) == 0
 
 
 def test_symbolic_write(setup):
-    proj, simgr = setup(FILE_DIR/"symbolic_write"/"enclave.so")
+    proj, simgr = setup(FILE_DIR / "symbolic_write" / "enclave.so")
     simgr.explore()
 
     assert len(simgr.violation) == 0
 
 
 def test_transition(setup):
-    proj = angr.Project(FILE_DIR/"transition"/"enclave.so")
-    ecalls = [
-        (ind, name, add, [(io[0][0], 0)])
-        for (ind, name, add, io) in guardian.tools.Heuristic.find_ecalls(proj)
-    ]
-    proj, simgr = setup(FILE_DIR/"transition"/"enclave.so", ecalls=ecalls)
+    proj = angr.Project(FILE_DIR / "transition" / "enclave.so")
+    ecalls = [(ind, name, add, [(io[0][0], 0)])
+              for (ind, name, add,
+                   io) in guardian.tools.Heuristic.find_ecalls(proj)]
+    proj, simgr = setup(FILE_DIR / "transition" / "enclave.so", ecalls=ecalls)
     simgr.explore()
 
     assert len(simgr.violation) == 0
 
 
 def test_transition_two(setup):
-    proj, simgr = setup(FILE_DIR/"transition2"/"enclave.so", enter_addr=0x0)
+    proj, simgr = setup(FILE_DIR / "transition2" / "enclave.so",
+                        enter_addr=0x0)
     simgr.explore()
 
     assert len(simgr.violation) == 0

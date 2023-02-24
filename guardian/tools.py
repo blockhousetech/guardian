@@ -36,6 +36,7 @@ class Default:
 
 
 class Heuristic:
+
     def find_exit(proj):
         enclave_entry_symb = proj.loader.find_symbol("enclave_entry")
         do_ocall_addr = proj.loader.find_symbol("do_ocall").rebased_addr
@@ -90,8 +91,8 @@ class Heuristic:
                             ocall_rets.append(i.address)
 
                     assert len(ocall_rets) > 0
-                    ocalls.append((symb.name, symb_addr, sgx_ocalls,
-                                   ocall_rets))
+                    ocalls.append(
+                        (symb.name, symb_addr, sgx_ocalls, ocall_rets))
 
         return ocalls
 
@@ -195,6 +196,7 @@ class Heuristic:
         return ecalls_info
 
     class Helper:
+
         def is_var_access(op_str):
             return "ptr [rax" in op_str or "ptr [rbx" in op_str
 
@@ -223,6 +225,7 @@ class Heuristic:
 
 
 class Report:
+
     def __init__(self, guardian_project, timeout):
         self.guardian_project = guardian_project
         self.timeout = timeout
@@ -264,21 +267,20 @@ class Report:
         assert self.timeout >= 0
 
         if ecall_addr == None or ecall_name == None:
-            [(_, ecall_name, ecall_addr,
-              _)] = [e for e in ecalls if e[0] == ecall_index]
+            [(_, ecall_name, ecall_addr, _)
+             ] = [e for e in ecalls if e[0] == ecall_index]
 
         # Instead of doing a deep copy, we will create a minimal guardian project.
         # It is customary but not required to place all import statements at the beginning of a module (Python documentation 6.1)
         # We violate this custom here...
         from .project import Project
         proj = angr.Project(self.guardian_project.angr_project.filename)
-        guard = Project(
-            proj,
-            find_missing_ecalls_or_ocalls=False,
-            old_sdk=self.guardian_project.old_sdk,
-            teaclave=self.guardian_project.teaclave,
-            ecalls=self.guardian_project.ecalls,
-            ocalls=self.guardian_project.ocalls)
+        guard = Project(proj,
+                        find_missing_ecalls_or_ocalls=False,
+                        old_sdk=self.guardian_project.old_sdk,
+                        teaclave=self.guardian_project.teaclave,
+                        ecalls=self.guardian_project.ecalls,
+                        ocalls=self.guardian_project.ocalls)
         guard.set_target_ecall(ecall_index)
 
         log.info("Analysing ecall: {} {}...".format(ecall_index, ecall_name))

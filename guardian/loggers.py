@@ -19,6 +19,7 @@ import zlib
 
 
 class Loggers:
+
     def __init__(self, default_level=logging.WARNING):
         self.default_level = default_level
         self._loggers = {}
@@ -77,6 +78,7 @@ class Loggers:
 
 
 class CuteHandler(logging.StreamHandler):
+
     def emit(self, record):
         color = zlib.adler32(record.name.encode()) % 7 + 31
         try:

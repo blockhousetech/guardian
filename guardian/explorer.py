@@ -20,6 +20,7 @@ import copy
 
 
 class EnclaveExploration(angr.exploration_techniques.ExplorationTechnique):
+
     def __init__(self):
         super().__init__()
         self.stage = ControlState.Entering

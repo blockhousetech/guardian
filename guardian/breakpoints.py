@@ -26,6 +26,7 @@ log = logging.getLogger(__name__)
 
 
 class Breakpoints:
+
     def setup(self, proj, simgr, layout, violation_check=True):
 
         # Violation detection breakpoints
@@ -37,7 +38,8 @@ class Breakpoints:
             simgr.active[0].inspect.b(
                 'mem_write',
                 when=angr.BP_BEFORE,
-                action=lambda s: self.detect_write_violations(simgr, s, layout))
+                action=lambda s: self.detect_write_violations(
+                    simgr, s, layout))
             simgr.active[0].inspect.b(
                 'exit',
                 when=angr.BP_BEFORE,
@@ -50,10 +52,9 @@ class Breakpoints:
             action=lambda st: st.enclave.call_stack.append(
                 TraceElement(st.project,
                              st.solver.eval(st.inspect.function_address))))
-        simgr.active[0].inspect.b(
-            'return',
-            when=angr.BP_BEFORE,
-            action=self.delete_last_call_if_exists)
+        simgr.active[0].inspect.b('return',
+                                  when=angr.BP_BEFORE,
+                                  action=self.delete_last_call_if_exists)
 
         # Trace tracking breakpoint
         simgr.active[0].inspect.b(
@@ -89,8 +90,9 @@ class Breakpoints:
             del state.enclave.call_stack[-1]
 
     def detect_read_violations(self, simgr, state, layout):
-        read_allowed = (state.enclave.ooe_rights == Rights.ReadWrite) or (
-            state.enclave.ooe_rights == Rights.Read)
+        read_allowed = (state.enclave.ooe_rights
+                        == Rights.ReadWrite) or (state.enclave.ooe_rights
+                                                 == Rights.Read)
         addr = state.inspect.mem_read_address
         assert state.inspect.mem_read_length is not None
         length = state.inspect.mem_read_length
@@ -119,9 +121,8 @@ class Breakpoints:
                 addr) and not state.solver.single_valued(addr):
             log.warning(
                 "\nState @{} \n!!!!!!! VIOLATION: SYMBOLIC READ ADDRESS !!!!!!!!\n  Address {}\n  Value {}\n  constraints were {}\n"
-                .format(
-                    hex(state.addr), addr, state.inspect.mem_read_expr,
-                    state.solver.constraints))
+                .format(hex(state.addr), addr, state.inspect.mem_read_expr,
+                        state.solver.constraints))
             violation = (ViolationType.SymbolicRead,
                          ViolationType.SymbolicRead.to_msg(),
                          state.inspect.mem_read_address,
@@ -142,16 +143,14 @@ class Breakpoints:
         allowed_range_end = allowed_range_begin + layout.enclave_size - length
         violation = None
 
-        if not write_allowed and state.solver.satisfiable(
-                extra_constraints=[
-                    claripy.Or(addr < allowed_range_begin,
-                               addr > allowed_range_end)
-                ]):
+        if not write_allowed and state.solver.satisfiable(extra_constraints=[
+                claripy.Or(addr < allowed_range_begin,
+                           addr > allowed_range_end)
+        ]):
             log.warning(
                 "\nState @{} \n!!!!!!! VIOLATION: OUT-OF-ENCLAVE WRITE !!!!!!!!\n  Address {}\n  Value {}\n  constraints were {}\n"
-                .format(
-                    hex(state.addr), addr, state.inspect.mem_write_expr,
-                    state.solver.constraints))
+                .format(hex(state.addr), addr, state.inspect.mem_write_expr,
+                        state.solver.constraints))
             violation = (ViolationType.OutOfEnclaveWrite,
                          ViolationType.OutOfEnclaveWrite.to_msg(),
                          state.inspect.mem_write_address,
@@ -161,9 +160,8 @@ class Breakpoints:
                 addr) and not state.solver.single_valued(addr):
             log.warning(
                 "\nState @{} \n!!!!!!! VIOLATION: SYMBOLIC WRITE ADDRESS !!!!!!!!\n  Address {}\n  Value {}\n  constraints were {}\n"
-                .format(
-                    hex(state.addr), addr, state.inspect.mem_write_expr,
-                    state.solver.constraints))
+                .format(hex(state.addr), addr, state.inspect.mem_write_expr,
+                        state.solver.constraints))
             violation = (ViolationType.SymbolicWrite,
                          ViolationType.SymbolicWrite.to_msg(),
                          state.inspect.mem_write_address,

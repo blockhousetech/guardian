@@ -25,6 +25,7 @@ from capstone import Cs, CS_ARCH_X86, CS_MODE_64
 
 
 class Project:
+
     def __init__(self,
                  angr_project,
                  heap_size=None,
@@ -65,10 +66,10 @@ class Project:
         self.init_enclave_state()
         self.entry_state.register_plugin('enclave',
                                          EnclaveState(self.angr_project))
-        self.entry_state.register_plugin('heap',
-                                         angr.SimHeapBrk(
-                                             heap_base=self.layout.heap_start,
-                                             heap_size=self.layout.heap_size))
+        self.entry_state.register_plugin(
+            'heap',
+            angr.SimHeapBrk(heap_base=self.layout.heap_start,
+                            heap_size=self.layout.heap_size))
         self.entry_state.libc.max_memcpy_size = 0x100
         self.entry_state.libc.max_buffer_size = 0x100
         self.entry_state.enclave.init_trace_and_stack()
@@ -83,7 +84,10 @@ class Project:
             self.exit_addr, self.enter_addr, self.old_sdk)
         # Enable violation checks if flag is set
         self.angr_project, self.simgr = Breakpoints().setup(
-            self.angr_project, self.simgr, self.layout, violation_check = violation_check)
+            self.angr_project,
+            self.simgr,
+            self.layout,
+            violation_check=violation_check)
         self.simgr.use_technique(EnclaveExploration())
 
     def use_heurestic_for_ecalls_or_ocalls(self):
@@ -101,8 +105,10 @@ class Project:
     def init_enclave_state(self):
         self.entry_state = self.angr_project.factory.blank_state()
         # Set angr options to silence warnings
-        self.entry_state.options.add(angr.options.SYMBOL_FILL_UNCONSTRAINED_MEMORY)
-        self.entry_state.options.add(angr.options.SYMBOL_FILL_UNCONSTRAINED_REGISTERS)
+        self.entry_state.options.add(
+            angr.options.SYMBOL_FILL_UNCONSTRAINED_MEMORY)
+        self.entry_state.options.add(
+            angr.options.SYMBOL_FILL_UNCONSTRAINED_REGISTERS)
         # Setup entry state
         self.entry_state.regs.rip = self.angr_project.loader.find_symbol(
             "enclave_entry").rebased_addr

@@ -26,6 +26,7 @@ log = logging.getLogger(__name__)
 
 class GuardianSimProcedure(angr.SimProcedure):
     """Base class for all Guardian SimProcedures. This class provides a common interface for all Guardian SimProcedures."""
+
     def __init__(self, violation_check=True, **kwargs):
         """Initialise the SimProcedure. If violation_check is True, then violations are checked."""
         super().__init__(**kwargs)
@@ -103,9 +104,9 @@ class RegisterEnteringValidation(GuardianSimProcedure):
         if self.violation_check:
             if self.state.enclave.control_state != ControlState.Entering:
                 violation = (ViolationType.Transition,
-                            ViolationType.Transition.to_msg(),
-                            self.state.enclave.control_state,
-                            "EnteringSanitisation")
+                             ViolationType.Transition.to_msg(),
+                             self.state.enclave.control_state,
+                             "EnteringSanitisation")
                 self.state.enclave.set_violation(violation)
                 self.state.enclave.found_violation = True
             else:
@@ -126,7 +127,8 @@ class TransitionToTrusted(GuardianSimProcedure):
     def run(self, **kwargs):
         log.debug("######### TRUSTED ###############")
         assert self.state.has_plugin("enclave")
-        if self.violation_check and not (self.state.enclave.control_state == ControlState.Entering
+        if self.violation_check and not (
+                self.state.enclave.control_state == ControlState.Entering
                 or self.state.enclave.control_state == ControlState.Ocall):
             violation = (ViolationType.Transition,
                          ViolationType.Transition.to_msg(),
@@ -173,7 +175,8 @@ class TransitionToExited(GuardianSimProcedure):
     def run(self, **kwargs):
         log.debug("######### EXITED ###############")
         assert self.state.has_plugin("enclave")
-        if self.violation_check and not (self.state.enclave.control_state == ControlState.Exiting
+        if self.violation_check and not (
+                self.state.enclave.control_state == ControlState.Exiting
                 or self.state.enclave.control_state == ControlState.Entering):
             violation = (ViolationType.Transition,
                          ViolationType.Transition.to_msg(),
@@ -214,6 +217,7 @@ class TransitionToOcall(GuardianSimProcedure):
 
 
 class OcallAbstraction(GuardianSimProcedure):
+
     def run(self, **kwargs):
         log.debug("######### OCALL ABSTRACTION ###############")
         assert self.state.has_plugin("enclave")
@@ -228,6 +232,7 @@ class OcallAbstraction(GuardianSimProcedure):
 
 
 class malloc(GuardianSimProcedure):
+
     def run(self, sim_size):
         if self.state.solver.symbolic(sim_size):
             log.warning("Allocating size {}\n".format(sim_size))
@@ -245,6 +250,7 @@ class malloc(GuardianSimProcedure):
 
 
 class Validation:
+
     def entering(state):
         log.debug("######### VALIDATION REGS ###############")
         state.solver.simplify()

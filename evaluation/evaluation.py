@@ -21,6 +21,7 @@ import os, sys
 import logging
 import contextlib
 import datetime
+
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 if __name__ == "__main__":
@@ -63,8 +64,9 @@ if __name__ == "__main__":
                              'Output_' + enclave_path.replace("/", "_")),
                 'w') as f:
             proj = angr.Project(enclave_path)
-            guard = guardian.Project(
-                angr_project=proj, old_sdk=old_sdk, teaclave=teaclave)
-            report = guardian.tools.Report(
-                guardian_project=guard, timeout=timeout)
+            guard = guardian.Project(angr_project=proj,
+                                     old_sdk=old_sdk,
+                                     teaclave=teaclave)
+            report = guardian.tools.Report(guardian_project=guard,
+                                           timeout=timeout)
             report.save(f)

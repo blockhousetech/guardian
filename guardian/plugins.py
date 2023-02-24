@@ -23,6 +23,7 @@ log = logging.getLogger(__name__)
 
 
 class TraceElement:
+
     def __init__(self, project, addr):
         self.address = addr
         self.symbol = None
@@ -32,6 +33,7 @@ class TraceElement:
 
 
 class EnclaveState(angr.SimStatePlugin):
+
     def __init__(self,
                  proj=None,
                  control_state=ControlState.Entering,
@@ -82,5 +84,5 @@ class EnclaveState(angr.SimStatePlugin):
 
     def set_violation(self, violation):
         self.violation = violation
-        log.warning("   Violation @ {} : {}".format(
-            hex(self.state.addr), self.violation))
+        log.warning("   Violation @ {} : {}".format(hex(self.state.addr),
+                                                    self.violation))
